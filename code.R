@@ -6,11 +6,6 @@ require(zoo) #format de serie temporelle pratique et facile d'utilisation (mais 
 require(tseries) #diverses fonctions sur les series temporelles
 
 
-
-### repertoire de travail 
-setwd( "C://Users//user//Desktop//ENSAE CURSUS//SEMESTRE 2//TIMES SERIES//PROJET_TEMPS")
-set.seed(2023)
-
 ## importation de la base 
 data <- read.csv("valeurs_mensuelles.csv",sep=";") # base de donnees originale
 df <- data[-c(1:2), ]                             # on enleve les deux valeurs les plus recentes
