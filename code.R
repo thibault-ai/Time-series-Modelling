@@ -50,7 +50,7 @@ Qtests(adf@test$lm$residuals, 24, fitdf = length(adf@test$lm$coefficients))
 
 
 # On rajoute des lags jusqu'à obtenirdes résidus décorrelés
-# si au bout de 24 on a que des no, c'est qu'on a que des garbages
+# si au bout de 24 on a que des NA, c'est qu'on a que des garbages
 series <- spread; kmax <- 24; adftype="ct"
 adfTest_valid <- function(series, kmax, adftype){
   k <- 0    # lag
@@ -149,10 +149,10 @@ pp.test(dspread)
 ##  recherche des ordres p et q
 par(mfrow=c(1,2))
 acf(dspread,24, main="", xlab="Retard", ylab="Autocorrelation")
-pacf(dspread,24,main="", xlab="Retard",ylab="Autocorrelation partielle");     #on regarde jusquà deux ans de retard
-# 
+pacf(dspread,24,main="", xlab="Retard",ylab="Autocorrelation partielle");     
+#on regarde jusqu à deux ans de retard
 
-pmax=4;qmax=4
+#on a pmax=4;qmax=4
 
 ##  ETAPE 3 SELECTION DU MEILLEUR MODELE
 
@@ -172,17 +172,18 @@ for (row in 1:dim(pqs)[1]){
 AICs
 BICs
 AICs==min(AICs) # AIC min p=4 et q=3
-#
+
 BICs==min(BICs) # BIC min p=0 et q=1
 
 
 # CONLUSION : arima (0,1,1) et arima(4,1,3) sont candidats
-# nous prenons le arima(0,1,1) car plus parcimonieux
 arima011 <- arima(spread,c(0,1,1),include.mean=F)
 arima011
 arima413<- arima(spread,c(4,1,3),include.mean=F)
 arima413
 
+#on évalue quel modèle a les meilleurs capacités prédictives
+# sur la base du R carré ajusté
 adj_r2 <- function(model){
   ss_res <- sum(model$residuals^2)
   ss_tot <- sum(dspread[-c(1:max(p,q))]^2)
@@ -196,15 +197,14 @@ adj_r2 <- function(model){
 adj_r2(arima011)
 adj_r2(arima413)
 
-# 5 - EXPRESSION DU MODELE RETENU 
-
-
+# l'écart de prédiction n'est pas très important
+# nous prenons le arima(0,1,1) car plus parcimonieux
 
 ####################################################################
 # PARTIE 3: Prevision 
 ####################################################################
 
-forecast <- forecast(arima011, h = 2)  # Predire les 10 prochaines valeurs
+forecast <- forecast(arima011, h = 2)  # Predire les 2 prochaines valeurs
 
 # Afficher la prediction avec la region de confiance
 png("Prevision.png")
